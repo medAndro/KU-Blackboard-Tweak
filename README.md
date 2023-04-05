@@ -1,7 +1,7 @@
 # 고려대학교 블랙보드 트윅 KU-Blackboard-Tweak
 
-## 다운로드 받은 영상물은 개인적으로만 사용하시고 무단으로 재배포하지마세요.
-https://blog.naver.com/polinlove2/222355927195
+## 다운로드 받은 영상은 개인적으로만 사용하시고 재배포 하지 마세요
+카드뉴스 출처- 경찰청 공식 블로그 : https://blog.naver.com/polinlove2/222355927195
 ![(5)](https://user-images.githubusercontent.com/88672474/229979532-475803ee-ff9c-4142-be75-8f58e40566af.png)
 
 
