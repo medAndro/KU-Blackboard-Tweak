@@ -1,6 +1,7 @@
 # 고려대학교 블랙보드 트윅 KU-Blackboard-Tweak
 
 ## 다운로드 받은 영상은 개인적으로만 사용하시고 재배포 하지 마세요
+### 다운로드한 영상의 재배포로 인한 법적 책임은 전적으로 이용자의 몫이며 저는 책임지지 않습니다.
 카드뉴스 출처- 경찰청 공식 블로그 : https://blog.naver.com/polinlove2/222355927195
 ![(5)](https://user-images.githubusercontent.com/88672474/229979532-475803ee-ff9c-4142-be75-8f58e40566af.png)
 
