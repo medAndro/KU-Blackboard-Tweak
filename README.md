@@ -1,7 +1,7 @@
 # 고려대학교 블랙보드 트윅 KU-Blackboard-Tweak
 
-## 다운로드 받은 영상은 개인적으로만 사용하시고 재배포 하지 마세요
-### 다운로드한 영상의 재배포로 인한 법적 책임은 전적으로 이용자의 몫이며 저는 책임지지 않습니다.
+## 다운로드 받은 영상은 개인적으로만 사용세요
+### 다운로드한 영상의 재배포로 인한 법적 책임은 전적으로 이용자의 몫입니다.
 카드뉴스 출처- 경찰청 공식 블로그 : https://blog.naver.com/polinlove2/222355927195
 ![(5)](https://user-images.githubusercontent.com/88672474/229979532-475803ee-ff9c-4142-be75-8f58e40566af.png)
 
@@ -10,6 +10,7 @@
 
 1. 블랙보드 온라인 녹화강의 P/F상태를 보여줍니다.
 2. 강의 영상 재생바에 다운로드 버튼을 만듭니다.  
+3. 내가 잘 하고 있습니까? 바로가기 메뉴를 만들며 석차를 보여줍니다.
 
 (구글 크롬 + Tampermonkey 환경에서만 작동 확인했음, PDF 판서 영상은 오디오만 다운로드 가능합니다.)  
 
@@ -30,5 +31,9 @@
 
 ## 스크린샷
 
- ![출석확인](https://user-images.githubusercontent.com/88672474/229791412-93b4a93e-b110-485f-af11-a80fd6f14664.png)
+![출석확인](https://user-images.githubusercontent.com/88672474/229791412-93b4a93e-b110-485f-af11-a80fd6f14664.png)
+ 
 ![다운로드](https://user-images.githubusercontent.com/88672474/229791420-e3db7462-5bbf-492c-945f-00fbdeb54abb.gif)
+
+![grade](https://github.com/medAndro/KU-Blackboard-Tweak/assets/88672474/c3513795-83cf-43e2-bf62-b09caa7bc969)
+
