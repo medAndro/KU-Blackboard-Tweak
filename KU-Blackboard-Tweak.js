@@ -1,15 +1,33 @@
 // ==UserScript==
 // @name         고려대학교 블랙보드 트윅
 // @namespace    https://kulms.korea.ac.kr/
-// @version      0.2
-// @description  고려대학교 블랙보드의 녹화강의 출석현황을 보거나 영상을 다운로드 합니다.
+// @version      0.3
+// @description  고려대학교 블랙보드의 녹화강의 출석현황을 보거나 영상을 다운로드하거나 블랙보드의 성적을 확인 합니다.
 // @author       Meda
 // @match        https://kulms.korea.ac.kr/webapps/blackboard/*
 // @match        https://kucom.korea.ac.kr/em/*
+// @match        https://kulms.korea.ac.kr/ultra/stream/telemetry/student/high-performance/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=ac.kr
 // @grant        GM_xmlhttpRequest
 // @license      MIT
 // ==/UserScript==
+
+
+function gradeCheckFunc() {
+    var currentUrl = window.location.href;
+    if(currentUrl.includes('course_id=')){
+        var urlPoint = currentUrl.indexOf('course_id=');
+        var courseId = currentUrl.substring(urlPoint+10, urlPoint+19);
+
+        document.querySelector("#courseMenuPalette_contents").insertAdjacentHTML('afterbegin', `<li id="paletteItem:" class="clearfix ">
+                                     <a href="/ultra/stream/telemetry/student/high-performance/`+courseId+`">
+                                     <span title="내가 잘 하고 있습니까?">내가 잘 하고 있습니까?</span></a></li>`);
+    }
+}
+
+if (window.location.href.startsWith('https://kulms.korea.ac.kr/webapps/blackboard/')) {
+    gradeCheckFunc();
+}
 
 
 function attendanceCheckFunc() {
@@ -27,6 +45,90 @@ function attendanceCheckFunc() {
 if (window.location.href.startsWith('https://kulms.korea.ac.kr/webapps/blackboard/')) {
     attendanceCheckFunc();
 }
+
+
+function viewMygradeFunc(courseId) {
+    // .full.activity-grade 요소를 찾을 때까지 0.1초마다 검색
+    var grade = -1; // 찾은 "grade" 값을 저장할 변수
+
+    var gradesArray = []; // grade 값을 저장할 배열 생성
+    var i, item;
+    var interval = setInterval(function() {
+        var element = document.querySelector('.full.activity-grade');
+
+        if (element) {
+            clearInterval(interval); // 검색 간격 멈추기
+            fetch('https://kulms.korea.ac.kr/learn/api/v1/courses/'+courseId+'/telemetry/reports/activityVsGrade')
+                .then(response => response.json())
+                .then(parsedData => {
+                console.log(parsedData);
+                // "data" 배열을 순회하면서 "userId" 값이 존재하는 객체의 "grade" 값을 가져오기
+                var userId = "userId"; // 찾고자 하는 "userId" 값
+
+                for (i = 0; i < parsedData.data.length; i++) {
+                    item = parsedData.data[i];
+                    if (item.hasOwnProperty(userId) && !isNaN(item.grade)) {
+                        grade = parseFloat(item.grade);
+                        break;
+                    }
+                }
+                for (var i = 0; i < parsedData.data.length; i++) {
+                    var item = parsedData.data[i];
+
+                    gradesArray.push(parseFloat(item.grade)); // grade 값을 배열에 추가
+                }
+
+                gradesArray.sort(function(a, b) {
+                    return b - a; // 내림차순으로 정렬
+                });
+
+                var index = gradesArray.indexOf(grade)+1;
+                var itemCount = gradesArray.length;
+
+                // .full.activity-grade 요소 선택
+                var parentElement = document.querySelector('.full.activity-grade');
+
+                var newHeading = document.createElement('h2');
+                newHeading.style.fontWeight = 'bold';
+
+                var gradeText = document.createElement('div');
+                var rankText = document.createElement('div');
+
+                if (grade == -1) {
+                    gradeText.textContent = '나의 성적: --%';
+                    rankText.textContent = '나의 석차: ' + itemCount + '명 중 --등  (상위: --%)';
+                } else {
+                    gradeText.textContent = '나의 성적: ' + (grade * 100) + '%';
+                    rankText.textContent = '나의 석차: ' + itemCount + '명 중 ' + index + '등  (상위: ' + (index / itemCount * 100).toFixed(2) + '%)';
+                }
+                newHeading.appendChild(gradeText);
+                newHeading.appendChild(rankText);
+
+                parentElement.insertBefore(newHeading, parentElement.firstChild);
+
+            })
+                .catch(error => {
+                // 오류 처리
+                console.error('오류 발생:', error);
+            });
+        }
+    }, 100);
+
+    // 10초 후에 검색 종료
+    setTimeout(function() {
+        clearInterval(interval); // 검색 간격 멈추기
+    }, 10000);
+}
+
+if (window.location.href.startsWith('https://kulms.korea.ac.kr/ultra/stream/telemetry/student/high-performance/')) {
+    var fullURL = window.location.href;
+    var lastNineCharacters = fullURL.slice(-9);
+    viewMygradeFunc(lastNineCharacters);
+}
+
+
+
+
 
 
 function mediaDownloadFunc() {
