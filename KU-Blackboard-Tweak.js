@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         고려대학교 블랙보드 트윅
 // @namespace    https://kulms.korea.ac.kr/
-// @version      0.3
+// @version      0.4
 // @description  고려대학교 블랙보드의 녹화강의 출석현황을 보거나 영상을 다운로드하거나 블랙보드의 성적을 확인 합니다.
 // @author       Meda
 // @match        https://kulms.korea.ac.kr/webapps/blackboard/*
@@ -61,21 +61,19 @@ function viewMygradeFunc(courseId) {
             fetch('https://kulms.korea.ac.kr/learn/api/v1/courses/'+courseId+'/telemetry/reports/activityVsGrade')
                 .then(response => response.json())
                 .then(parsedData => {
-                console.log(parsedData);
-                // "data" 배열을 순회하면서 "userId" 값이 존재하는 객체의 "grade" 값을 가져오기
-                var userId = "userId"; // 찾고자 하는 "userId" 값
 
-                for (i = 0; i < parsedData.data.length; i++) {
-                    item = parsedData.data[i];
-                    if (item.hasOwnProperty(userId) && !isNaN(item.grade)) {
-                        grade = parseFloat(item.grade);
-                        break;
-                    }
-                }
                 for (var i = 0; i < parsedData.data.length; i++) {
                     var item = parsedData.data[i];
-
-                    gradesArray.push(parseFloat(item.grade)); // grade 값을 배열에 추가
+                    if (item.membership) {
+                        // membership이 존재하는 경우
+                        grade = parseFloat(item.grade); // 나의 grade 값을 추가
+                        gradesArray.push(parseFloat(item.grade)); // grade 값을 배열에 추가
+                    }else if (!item.grade) {
+                        // grade가 존재하는않는 경우
+                        grade = 0.0;
+                    }else{
+                        gradesArray.push(parseFloat(item.grade)); // grade 값을 배열에 추가
+                    }
                 }
 
                 gradesArray.sort(function(a, b) {
@@ -98,7 +96,7 @@ function viewMygradeFunc(courseId) {
                     gradeText.textContent = '나의 성적: --%';
                     rankText.textContent = '나의 석차: ' + itemCount + '명 중 --등  (상위: --%)';
                 } else {
-                    gradeText.textContent = '나의 성적: ' + (grade * 100) + '%';
+                    gradeText.textContent = '나의 성적: ' + (grade * 100).toFixed(3) + '%';
                     rankText.textContent = '나의 석차: ' + itemCount + '명 중 ' + index + '등  (상위: ' + (index / itemCount * 100).toFixed(2) + '%)';
                 }
                 newHeading.appendChild(gradeText);
